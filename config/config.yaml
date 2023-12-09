@@ -1,0 +1,9 @@
+app:
+  name: "task-manager"
+server:
+  port: "8001"
+  readTimeout: 1m
+  writeTimeout: 1m
+  shutdownTimeout: 5s
+pg:
+  connURI: "postgres://green:0010@postgres:5432/pg-task-manager"
