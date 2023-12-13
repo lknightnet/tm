@@ -12,6 +12,6 @@ func NewRoutes(srv *service.Services, r *mux.Router) {
 	ctrlNote := newNoteController(srv.MN)
 	ctrlNote.newNoteRoutes(r)
 
-	//ctrlUser := newUserController(srv.MU)
-	//ctrlUser.newUserRoutes(r)
+	ctrlUser := newUserController(srv.MU)
+	ctrlUser.newUserRoutes(r)
 }

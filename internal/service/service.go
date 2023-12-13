@@ -34,8 +34,8 @@ type Dependencies struct {
 
 func NewServices(deps *Dependencies) *Services {
 	return &Services{
-		MN: nil,
+		MN: newNoteService(deps.Repos.MN),
 		MP: newProjectService(deps.Repos.MP),
-		MU: nil,
+		MU: newUserService(deps.Repos.MU),
 	}
 }

@@ -1,8 +1,11 @@
 package http
 
 import (
+	"encoding/json"
 	"github.com/gorilla/mux"
+	"log"
 	"net/http"
+	"task-manager/internal/model"
 	"task-manager/internal/service"
 )
 
@@ -20,9 +23,37 @@ func (u *userController) newUserRoutes(r *mux.Router) {
 }
 
 func (u *userController) addUser(w http.ResponseWriter, r *http.Request) {
+	var body model.ProjectUser
 
+	err := json.NewDecoder(r.Body).Decode(&body)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	err = u.MU.AddUser(r.Context(), &body)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
 
 func (u *userController) removeUser(w http.ResponseWriter, r *http.Request) {
+	var body model.ProjectUser
 
+	err := json.NewDecoder(r.Body).Decode(&body)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	err = u.MU.RemoveUser(r.Context(), &body)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }

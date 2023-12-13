@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/Masterminds/squirrel"
 	"github.com/pkg/errors"
-	"log"
 	"task-manager/internal/model"
 	"task-manager/pkg/database"
 )
@@ -22,9 +21,6 @@ func (p *projectRepository) CreateProject(ctx context.Context, proj *model.Proje
 		return errors.Wrap(err, "CreateProject: sql generator is failed")
 	}
 
-	log.Println(sql)
-	log.Println(args)
-
 	_, err = p.pg.Pool.Exec(ctx, sql, args...)
 	if err != nil {
 		return errors.Wrap(err, "CreateProject: fail to exec")
@@ -33,18 +29,38 @@ func (p *projectRepository) CreateProject(ctx context.Context, proj *model.Proje
 }
 
 func (p *projectRepository) RemoveProject(ctx context.Context, proj *model.Project) error {
-	sql, args, err := p.pg.Builder.Delete("projects").Where(squirrel.Eq{"id": proj.ID}).ToSql()
-	if err != nil {
-		return errors.Wrap(err, "RemoveProject: sql generator is failed")
-	}
+	sql, args, err := p.pg.Builder.Delete("notes").Where(squirrel.Eq{"idproject": proj.ID}).ToSql()
 
-	log.Println(sql)
-	log.Println(args)
+	if err != nil {
+		return errors.Wrap(err, "RemoveProject: sql delete notes generator is failed")
+	}
 
 	_, err = p.pg.Pool.Exec(ctx, sql, args...)
 	if err != nil {
-		return errors.Wrap(err, "RemoveProject: fail to exec")
+		return errors.Wrap(err, "RemoveProject: fail to exec delete notes")
 	}
+
+	sql, args, err = p.pg.Builder.Delete("projectusers").Where(squirrel.Eq{"idproject": proj.ID}).ToSql()
+
+	if err != nil {
+		return errors.Wrap(err, "RemoveProject: sql delete users generator is failed")
+	}
+
+	_, err = p.pg.Pool.Exec(ctx, sql, args...)
+	if err != nil {
+		return errors.Wrap(err, "RemoveProject: fail to exec delete users")
+	}
+
+	sql, args, err = p.pg.Builder.Delete("projects").Where(squirrel.Eq{"id": proj.ID}).ToSql()
+	if err != nil {
+		return errors.Wrap(err, "RemoveProject: sql delete projects generator is failed")
+	}
+
+	_, err = p.pg.Pool.Exec(ctx, sql, args...)
+	if err != nil {
+		return errors.Wrap(err, "RemoveProject: fail to exec delete projects")
+	}
+
 	return nil
 }
 

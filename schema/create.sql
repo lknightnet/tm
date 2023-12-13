@@ -15,5 +15,6 @@ create table notes(
 
 create table projectusers(
     iduser varchar not null,
-    idproject varchar not null
+    idproject varchar not null,
+        FOREIGN KEY(idproject) REFERENCES projects(id)
 );

@@ -31,7 +31,7 @@ type Repositories struct {
 func NewRepositories(pg *database.Postgres) *Repositories {
 	return &Repositories{
 		MP: newProjectRepository(pg),
-		MU: nil,
-		MN: nil,
+		MU: newUserRepository(pg),
+		MN: newNoteRepository(pg),
 	}
 }
